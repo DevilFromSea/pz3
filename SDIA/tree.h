@@ -8,6 +8,12 @@ struct tree
 
 void add(tree **t, int x);
 
-void buildtree(tree **t, FILE *f);
+void buildtree(tree **t);
 
-void postorder(tree *t);
+void directed(tree *t);
+
+void postorder1(tree *t);
+
+void postorder2(tree *t);
+
+void instructions();

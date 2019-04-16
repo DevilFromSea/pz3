@@ -38,9 +38,11 @@ void add(tree **t, int x)
 	}
 }
 
-void buildtree(tree **t, FILE *f)
+void buildtree(tree **t)
 {
 	int num;
+	FILE *f;
+	fopen_s(&f, "f.txt", "r");
 	while (fscanf_s(f, "%d", &num) != EOF && num != 0)
 	{
 		add(t, num);
@@ -49,26 +51,36 @@ void buildtree(tree **t, FILE *f)
 	fclose(f);
 }
 
-void postorder(tree *t)
+void directed(tree *t)
+{
+
+}
+
+void postorder1(tree *t)
+{
+
+}
+
+void postorder2(tree *t)
 {
 	stack <tree *> S;
 	tree *lastn = NULL;
 	tree *topn = NULL;
-	while (!empty(S) || t) 
+	while (!empty(S) || t)
 	{
-		if (t) 
+		if (t)
 		{
 			S.push(t);
 			t = t->left;
 		}
-		else 
+		else
 		{
 			topn = S.top();
-			if (topn->right && lastn != topn->right) 
+			if (topn->right && lastn != topn->right)
 			{
 				t = topn->right;
 			}
-			else 
+			else
 			{
 				S.pop();
 				printf_s("%d\n", topn->data);
@@ -76,4 +88,13 @@ void postorder(tree *t)
 			}
 		}
 	}
+}
+
+void instructions()
+{
+	printf_s("How would you like to print the tree?\n"
+			 "1)Directed order\n"
+			 "2)Postorder (left child -> root -> right child)\n"
+			 "3)Postorder (left child -> right child -> root)\n"
+			 "4)Exit\n");
 }
