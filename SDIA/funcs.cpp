@@ -57,7 +57,6 @@ void directed(tree *t)
 	while (t) 
 	{
 		printf_s("%d\n", t->data);
-
 		if (t->left && t->right)
 		{
 			S.push(t->right);
