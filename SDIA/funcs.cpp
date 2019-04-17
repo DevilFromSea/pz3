@@ -6,10 +6,7 @@ void add(tree **t, int x)
 {
 	if (!*t)
 	{
-		*t = new tree;
-		(*t)->data = x;
-		(*t)->left = NULL;
-		(*t)->right = NULL;
+		*t = new tree(x, NULL, NULL);
 		return;
 	}
 	if (x < (*t)->data)
@@ -17,24 +14,14 @@ void add(tree **t, int x)
 		if ((*t)->left)
 			add(&(*t)->left, x);
 		else
-		{
-			(*t)->left = new tree;
-			(*t)->left->left = NULL;
-			(*t)->left->right = NULL;
-			(*t)->left->data = x;
-		}
+			(*t)->left = new tree(x, NULL, NULL);
 	}
 	if (x > (*t)->data)
 	{
 		if ((*t)->right != NULL)
 			add(&(*t)->right, x);
 		else
-		{
-			(*t)->right = new tree;
-			(*t)->right->left = NULL;
-			(*t)->right->right = NULL;
-			(*t)->right->data = x;
-		}
+			(*t)->right = new tree(x, NULL, NULL);
 	}
 }
 
@@ -43,7 +30,7 @@ void buildtree(tree **t)
 	int num;
 	FILE *f;
 	fopen_s(&f, "f.txt", "r");
-	while (fscanf_s(f, "%d", &num) != EOF && num != 0)
+	while (fscanf_s(f, "%d", &num) != EOF)
 	{
 		add(t, num);
 		printf_s("%d was put in tree\n", num);
@@ -77,9 +64,36 @@ void directed(tree *t)
 
 void postorder1(tree *t)
 {
-	postorder2(t->left);
-	printf_s("%d\n", t->data);
-	postorder2(t->right);
+	stack <tree *> S;
+	bool toleft = true;
+	tree *lastn = t;
+	if (t)
+	{
+		S.push(lastn);
+		while (!empty(S))
+		{
+			if (toleft)
+			{
+				while (lastn->left)
+				{
+					S.push(lastn);
+					lastn = lastn->left;
+				}
+			}
+			printf_s("%d\n", lastn->data);
+			if (lastn->right)
+			{
+				lastn = lastn->right;
+				toleft = true;
+			}
+			else
+			{
+				lastn = S.top();
+				S.pop();
+				toleft = false;
+			}
+		}
+	}
 }
 
 void postorder2(tree *t)
@@ -87,7 +101,9 @@ void postorder2(tree *t)
 	stack <tree *> S;
 	tree *lastn = NULL;
 	tree *topn = NULL;
-	while (!empty(S) || t)
+	S.push(t);
+	t = t->left;
+	while (!empty(S))
 	{
 		if (t)
 		{
